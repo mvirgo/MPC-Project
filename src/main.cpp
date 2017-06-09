@@ -98,8 +98,37 @@ int main() {
           * Both are in between [-1, 1].
           *
           */
-          double steer_value;
-          double throttle_value;
+          Eigen::VectorXd ptsx_eigen(ptsx.size());
+          Eigen::VectorXd ptsy_eigen(ptsy.size());
+          
+          for (int z = 0; z < ptsx.size(); ++z) {
+            ptsx_eigen[z] = ptsx[z];
+          }
+          
+          for (int y = 0; y < ptsy.size(); ++y) {
+            ptsy_eigen[y] = ptsy[y];
+          }
+          
+          // *** NEED TO TRANSFORM THE POINTS ***
+          // Fit a 2nd-order polynomial to the above x and y coordinates
+          // Second order is fine
+          auto coeffs = polyfit(ptsx_eigen, ptsy_eigen, 2);
+          
+          // Calculate the cross track error
+          double cte = polyeval(coeffs, px) - py;
+          
+          // Calculate the orientation error
+          // Derivative of the polyfit goes in atan() below
+          double epsi = psi - atan(coeffs[1] + (2 * coeffs[2] * px));
+          
+          // Calculate steering and throttle
+          Eigen::VectorXd state(6);
+          state << px, py, psi, v, cte, epsi;
+            
+          auto vars = mpc.Solve(state, coeffs);
+          
+          double steer_value = vars[6] / deg2rad(25);
+          double throttle_value = vars[7];
 
           json msgJson;
           // NOTE: Remember to divide by deg2rad(25) before you send the steering value back.
