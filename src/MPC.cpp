@@ -61,19 +61,19 @@ class FG_eval {
     // any anything you think may be beneficial.
     
     for (int t = 0; t < N; t++) {
-      fg[0] += CppAD::pow(vars[cte_start + t], 2);
-      fg[0] += CppAD::pow(vars[epsi_start + t], 2);
+      fg[0] += 2000*CppAD::pow(vars[cte_start + t], 2);
+      fg[0] += 2000*CppAD::pow(vars[epsi_start + t], 2);
       fg[0] += CppAD::pow(vars[v_start + t] - ref_v, 2);
     }
     
     for (int t = 0; t < N-1; t++) {
-      fg[0] += CppAD::pow(vars[delta_start + t], 2);
-      fg[0] += CppAD::pow(vars[a_start + t], 2);
+      fg[0] += 5*CppAD::pow(vars[delta_start + t], 2);
+      fg[0] += 5*CppAD::pow(vars[a_start + t], 2);
     }
     
     for (int t = 0; t < N-2; t++) {
-      fg[0] += pow(vars[delta_start + t + 1] - vars[delta_start + t], 2);
-      fg[0] += pow(vars[a_start + t + 1] - vars[a_start + t], 2);
+      fg[0] += 200*pow(vars[delta_start + t + 1] - vars[delta_start + t], 2);
+      fg[0] += 10*pow(vars[a_start + t + 1] - vars[a_start + t], 2);
     }
     
     //
@@ -115,8 +115,8 @@ class FG_eval {
       AD<double> delta0 = vars[delta_start + t - 1];
       AD<double> a0 = vars[a_start + t - 1];
       
-      AD<double> f0 = coeffs[0] + coeffs[1] * x0;
-      AD<double> psi_des0 = CppAD::atan(coeffs[1]);
+      AD<double> f0 = coeffs[0] + coeffs[1] * x0 + coeffs[2] * x0 * x0;
+      AD<double> psi_des0 = CppAD::atan(coeffs[1] + 2*coeffs[2]*x0);
       
       // Here's `x` to get you started.
       // The idea here is to constraint this value to be 0.
@@ -267,8 +267,13 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   //
   // {...} is shorthand for creating a vector, so auto x1 = {1.0,2.0}
   // creates a 2 element double vector.
-  return {solution.x[x_start + 1],   solution.x[y_start + 1],
-          solution.x[psi_start + 1], solution.x[v_start + 1],
-          solution.x[cte_start + 1], solution.x[epsi_start + 1],
-          solution.x[delta_start],   solution.x[a_start]};
+  vector<double> solved = {solution.x[delta_start + 1], solution.x[a_start + 1]};
+  
+  for (int i = 0; i < N; ++i) {
+    solved.push_back(solution.x[x_start + 1 + i]);
+    solved.push_back(solution.x[y_start + 1 + i]);
+  }
+  
+  return solved;
+
 }
