@@ -4,15 +4,14 @@ Udacity Self-Driving Car Nanodegree Term 2, Project 5
 **This project is still in progress. Check back later for final results**
 
 #### Completed Steps
-* **PENDING**
-
-#### Upcoming Steps
 * Setting timestep length and duration, accounting for latency
 * Implement MPC calculation
 * Setting variables & constraints
 * Calculating steering angle & throttle/brake
-* Testing/tuning of above implementations on simple data
-* Further testing/tuning on the Udacity simulator
+
+#### Upcoming Steps
+
+* Testing/tuning of above implementations on Udacity simulator
 * Recording of video from the Simulator when sufficiently tuned
 * Updating of ReadMe and Finalization
 
