@@ -8,11 +8,11 @@ Udacity Self-Driving Car Nanodegree Term 2, Project 5
 * Implement MPC calculation
 * Setting variables & constraints
 * Calculating steering angle & throttle/brake
+* Testing/tuning of above implementations on Udacity simulator
+* Recording of video from the Simulator when sufficiently tuned
 
 #### Upcoming Steps
 
-* Testing/tuning of above implementations on Udacity simulator
-* Recording of video from the Simulator when sufficiently tuned
 * Updating of ReadMe and Finalization
 
 ---

@@ -135,8 +135,8 @@ int main() {
           
           // Predict state after latency
           // x, y and psi are all zero after transformation above
-          double pred_px = 0.0 + v * dt;
-          const double pred_py = 0.0;
+          double pred_px = 0.0 + v * dt; // Since psi is zero, cos(0) = 1, can leave out
+          const double pred_py = 0.0; // Since sin(0) = 0, y stays as 0 (y + v * 0 * dt)
           double pred_psi = 0.0 + v * -delta / Lf * dt;
           double pred_v = v + a * dt;
           double pred_cte = cte + v * sin(epsi) * dt;

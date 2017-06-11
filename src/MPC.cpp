@@ -23,8 +23,8 @@ double dt = 0.1;
 // This is the length from front to CoG that has a similar radius.
 const double Lf = 2.67;
 
-// Set desired speed for the cost function
-const double ref_v = 100;
+// Set desired speed for the cost function (i.e. max speed)
+const double ref_v = 120;
 
 // The solver takes all the state variables and actuator
 // variables in a singular vector. Thus, we should to establish
@@ -60,10 +60,10 @@ class FG_eval {
     const int cte_cost_weight = 2000;
     const int epsi_cost_weight = 2000;
     const int v_cost_weight = 1;
-    const int delta_cost_weight = 1;
-    const int a_cost_weight = 1;
-    const int delta_change_cost_weight = 1;
-    const int a_change_cost_weight = 1;
+    const int delta_cost_weight = 10;
+    const int a_cost_weight = 10;
+    const int delta_change_cost_weight = 100;
+    const int a_change_cost_weight = 10;
     
     // Cost for CTE, expected psi and velocity
     for (int t = 0; t < N; t++) {
