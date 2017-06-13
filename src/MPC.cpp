@@ -65,7 +65,7 @@ class FG_eval {
     const int delta_change_cost_weight = 100;
     const int a_change_cost_weight = 10;
     
-    // Cost for CTE, expected psi and velocity
+    // Cost for CTE, psi error and velocity
     for (int t = 0; t < N; t++) {
       fg[0] += cte_cost_weight * CppAD::pow(vars[cte_start + t], 2);
       fg[0] += epsi_cost_weight * CppAD::pow(vars[epsi_start + t], 2);
