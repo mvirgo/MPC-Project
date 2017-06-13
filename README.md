@@ -16,14 +16,40 @@ Using Model Predictive Control (MPC), this project involves writing a C++ progra
 ### Results
 See video of the results from my implementation [here](MPC_vid.mov). The car is able to approach speeds of nearly 100 mph, with only a few hitches in its planned route (which it self-corrects for in the following timestep).
 
-## Reflection
+## Discussion/Reflection
 ### The Model
+My MPC model starts out by taking in certain information from the simulator: 
+* ptsx (x-position of waypoints ahead on the track in global coordinates)
+* ptsy (y-position of waypoints ahead on the track in global coordinates)
+* px (current x-position of the vehicle's position in global coordinates)
+* py (current y-position of the vehicle's position in global coordinates)
+* psi (current orientation angle of the vehicle, converted from the simulator's format to that expected in mathematical formulas)
+* v (current velocity of the vehicle)
+* delta (current steering angle of the car, i.e. where the wheels are turned, as opposed to the actual orientation of the car in the simulator at that point [psi])
+* a (current throttle)
+
+#### Polynomial Fitting & Preprocessing
+Now, in order to simplify the calculations, I transform the points from the simulator's global coordinates into the vehicle's coordinates. This is done in lines 102-107 of `main.cpp`. First, each of the waypoints are adjusted by subtracting out px and py accordingly such that they are based on the vehicle's position. Next, the waypoint coordinates are changed using standard 2d vector transformation equations to be in vehicle coordinates:
+* ptsx_car[i] = x * cos(-psi) - y * sin(-psi)
+* ptsy_car[i] = x * sin(-psi) + y * cos(-psi)
+
+Using the `polyfit()` function, a third-degree polynomial line is fit to these transformed waypoints, essentially drawing the path the vehicle should try to travel. Moving on further is where the transformations are critical - because we are operating from the vehicle's coordinates, we can use px, py and psi all equal to zero: from the vehicle's standpoint, it is the center of the coordinate system, and it is always pointing to a zero orientation. The cross-track error can then be calculated by evaluating the polynomial function (`polyeval()`) at px (which in this case is now zero, so technically could also just be calculated as the first coefficient value - i.e. the one with a zero-order x). The psi error, or epsi, which is calculated from the derivative of polynomial fit line, is therefore simpler to calculate, as polynomials above the first order in the original equation are all eliminated through multiplication by zero (since x is zero). It is the negative arc tangent of the second coefficient (the first-order x was in the original polynomial).
+
+#### Accounting for Latency
+In what was perhaps the most important aspect of this project, my model then accounts for the simulator's added 100ms latency between the actuator calculation (when the model tells the car to perform a steering or acceleration/braking change) and when the simulator will actually perform that action. I originally tried to account for this by changing the N and dt values within `MPC.cpp`, but found that to be in an incorrect approach, as while my initial attempts held the line well at the beginning, it always failed to initiate a turn in time to not run off the track at the first curve.
+
+To implement this, I added in a step to predict where the vehicle would be after 100ms (0.1 seconds), in order to take the action that needed to actually be taken at that time, instead of the one in reaction to an old situation. I set the "dt" value here (not to be confused with the one in `MPC.cpp`, although both are the same value) to equal the latency. Then, using the same update equations as those used in the actual MPC model, I predicted the state and fed that into the true model. Note that these equations were able to be simplified again because of the coordinate system transformation - using x, y and psi all of zero made these equations a little simpler, as lots of the values end up being zero or one. See lines 131-143 in `main.cpp`. This new predicted state, along with the coefficients, are then fed into the `mpc.Solve()` function found in `MPC.cpp`.
+
+#### MPC.cpp - Where the Magic Happens
 **Coming soon**
-### Tuning Timesteps (N) and Timestep Duration (dt)
+* To discuss overall variables and constraints
+* To discuss weights for cost functions
+
+### Back to The Simulator
 **Coming soon**
-### Polynomial Fitting and MPC Preprocessing
-**Coming soon**
-### Model Predictive Control with Latency
+* To discuss what gets returned from MPC.cpp and how to draw the lines
+
+#### Tuning Timesteps (N) and Timestep Duration (dt) in MPC.cpp
 **Coming soon**
 
 ---
