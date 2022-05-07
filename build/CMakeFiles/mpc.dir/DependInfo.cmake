@@ -1,19 +1,15 @@
+
+# Consider dependencies only in project.
+set(CMAKE_DEPENDS_IN_PROJECT_ONLY OFF)
+
 # The set of languages for which implicit dependencies are needed:
 set(CMAKE_DEPENDS_LANGUAGES
-  "CXX"
   )
-# The set of files for implicit dependencies of each language:
-set(CMAKE_DEPENDS_CHECK_CXX
-  "/Users/apple/Desktop/MPC-Project/src/MPC.cpp" "/Users/apple/Desktop/MPC-Project/build/CMakeFiles/mpc.dir/src/MPC.cpp.o"
-  "/Users/apple/Desktop/MPC-Project/src/main.cpp" "/Users/apple/Desktop/MPC-Project/build/CMakeFiles/mpc.dir/src/main.cpp.o"
-  )
-set(CMAKE_CXX_COMPILER_ID "Clang")
 
-# The include file search paths:
-set(CMAKE_CXX_TARGET_INCLUDE_PATH
-  "/usr/local/include"
-  "../src/Eigen-3.3"
-  "/usr/local/opt/openssl/include"
+# The set of dependency files which are needed:
+set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/home/adol/bishe/MPC-Project/src/MPC.cpp" "CMakeFiles/mpc.dir/src/MPC.cpp.o" "gcc" "CMakeFiles/mpc.dir/src/MPC.cpp.o.d"
+  "/home/adol/bishe/MPC-Project/src/main.cpp" "CMakeFiles/mpc.dir/src/main.cpp.o" "gcc" "CMakeFiles/mpc.dir/src/main.cpp.o.d"
   )
 
 # Targets to which this target links.
